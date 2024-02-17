@@ -1,7 +1,7 @@
 ﻿function agregarNuevaTareaAlListado() {
     tareaListadoViewModel.tareas.push(new tareaElementoListadoViewModel({ id: 0, titulo: '' }));
 
-    $("[name=titulo-tarea]").last().focus();
+    $("[name=titulo-tarea]").last().trigger("focus");
 }
 
 async function manejarFocusOutTituloTarea(tarea) {
@@ -106,6 +106,12 @@ async function manejarClickTarea(tarea) {
     tareaEditarVM.titulo(json.titulo);
     tareaEditarVM.descripcion(json.descripcion);
 
+    tareaEditarVM.pasos([]);
+
+    json.pasos.forEach(paso => {
+        tareaEditarVM.pasos.push(new pasoViewModel({ ...paso, modoEdicion: false }))
+    });
+
     modalEditarTareaBootstrap.show();
 }
 
@@ -176,6 +182,11 @@ async function borrarTarea(tarea) {
 
 function obtenerIndiceTareaEnEdicion() {
     return tareaListadoViewModel.tareas().findIndex(t => t.id() == tareaEditarVM.id);
+}
+
+function obtenerTareaEnEdicion() {
+    const indice = obtenerIndiceTareaEnEdicion();
+    return tareaListadoViewModel.tareas()[indice];
 }
 
 $(function () {
